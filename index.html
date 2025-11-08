@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Journey to 60 – FireballMC</title>
+  <style>
+    /* ====== SAME FIRE THEME ====== */
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:Arial,sans-serif;background:linear-gradient(135deg,#1a0a00 0%,#2d1300 50%,#1a0a00 100%);color:#fff;min-height:100vh;}
+    .sidebar{width:280px;height:100vh;position:fixed;left:0;top:0;background:linear-gradient(180deg,#2d1300 0%,#1a0a00 100%);border-right:2px solid #ff6b35;box-shadow:4px 0 20px rgba(255,107,53,.3);padding:2rem 0;z-index:1000;}
+    .logo h1{font-size:1.8rem;background:linear-gradient(45deg,#ff6b35,#ffd166);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:3rem;animation:flicker 2s infinite alternate;}
+    @keyframes flicker{0%{text-shadow:0 0 10px #ff6b35;}100%{text-shadow:0 0 40px #ffd166;}}
+    .nav-menu{list-style:none;padding:0 1rem;}
+    .nav-item{position:relative;padding:1rem 1.5rem;margin-bottom:.5rem;border-radius:15px;display:flex;align-items:center;gap:1rem;overflow:hidden;transition:all .3s ease;}
+    .nav-item::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,107,53,.4),transparent);transition:left .5s ease;}
+    .nav-item:hover::before{left:100%;}
+    .nav-item:hover{background:rgba(255,107,53,.1);transform:translateX(5px);}
+    .nav-item.active{background:linear-gradient(135deg,#ff6b35,#ff9a5a);box-shadow:0 4px 15px rgba(255,107,53,.4);}
+    .main-content{margin-left:280px;padding:3rem 2rem;min-height:100vh;}@media(max-width:768px){.sidebar{width:100%;height:auto;position:relative;}.main-content{margin-left:0;padding:2rem 1rem;}}
+    .fire-title{font-size:3rem;margin-bottom:2rem;background:linear-gradient(45deg,#ff6b35,#ffd166,#ff9a5a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;animation:titleBurn 3s infinite alternate;}
+    @keyframes titleBurn{0%{text-shadow:0 0 10px #ff6b35;}100%{text-shadow:0 0 40px #ffd166;}}
+    .counter-wrap{display:flex;flex-wrap:wrap;gap:2rem;justify-content:center;margin-bottom:3rem;}
+    .counter-card{background:linear-gradient(135deg,rgba(255,107,53,.1),rgba(255,154,90,.1));border:2px solid #ff6b35;border-radius:15px;padding:2rem 3rem;text-align:center;animation:float 4s ease-in-out infinite;}
+    @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+    .counter-card h3{color:#ffd166;margin-bottom:.5rem;font-size:1.2rem;}
+    .counter-num{font-size:3rem;font-weight:bold;color:#ff6b35;text-shadow:0 0 10px rgba(255,107,53,.5);}
+    .counter-num.scroll-flame{animation:scrollFlame 1.2s ease-out;}
+    @keyframes scrollFlame{0%{transform:translateY(30px) scale(.8);opacity:0;}50%{text-shadow:0 0 20px #ffd166;}100%{transform:translateY(0) scale(1);opacity:1;}}
+    .progress-wrap{max-width:600px;margin:auto auto 3rem;}
+    .progress-bar{height:30px;background:rgba(255,107,53,.2);border-radius:15px;overflow:hidden;position:relative;}
+    .progress-fill{height:100%;background:linear-gradient(90deg,#ff6b35,#ffd166);border-radius:15px;width:0;transition:width 1.5s ease;position:relative;}
+    .progress-fill::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);animation:shimmer 2s infinite;}
+    @keyframes shimmer{0%{transform:translateX(-100%);}100%{transform:translateX(100%);}}
+    .progress-label{text-align:center;margin-top:.75rem;color:#ffd166;font-size:1.1rem;}
+
+    /* ====== NEW: DAILY COUNTDOWN CARD ====== */
+    .countdown-card{background:linear-gradient(135deg,rgba(255,107,53,.1),rgba(255,154,90,.1));border:2px solid #ff6b35;border-radius:15px;padding:2rem 3rem;text-align:center;margin:auto auto 3rem;max-width:400px;animation:float 4s ease-in-out infinite;}
+    .countdown-card h3{color:#ffd166;margin-bottom:.5rem;font-size:1.2rem;}
+    .countdown-num{font-size:3rem;font-weight:bold;color:#ff6b35;text-shadow:0 0 10px rgba(255,107,53,.5);}
+    .countdown-label{color:#ffd166;font-size:1rem;}
+
+    /* ====== CHART ====== */
+    .chart-wrap{max-width:600px;margin:auto;}
+    .chart-card{background:linear-gradient(135deg,rgba(255,107,53,.1),rgba(255,154,90,.1));border:2px solid #ff6b35;border-radius:15px;padding:2rem;}
+    .chart-title{color:#ffd166;text-align:center;margin-bottom:1.5rem;}
+    .bar-row{display:flex;align-items:center;margin-bottom:.75rem;}
+    .bar-label{width:100px;color:#fff;font-size:.9rem;}
+    .bar-track{flex:1;height:20px;background:rgba(255,107,53,.2);border-radius:10px;overflow:hidden;}
+    .bar-fill{height:100%;background:linear-gradient(90deg,#ff6b35,#ffd166);border-radius:10px;width:0;transition:width 1.2s ease;}
+    .bar-num{margin-left:.75rem;color:#ff6b35;font-weight:bold;width:40px;text-align:right;}
+
+    /* ====== EMBERS ====== */
+    .ember{position:fixed;width:4px;height:4px;background:#ff6b35;border-radius:50%;pointer-events:none;z-index:1;animation:floatEmber 6s linear infinite;}
+    @keyframes floatEmber{0%{transform:translateY(100vh) scale(1);opacity:1;}100%{transform:translateY(-100vh) scale(0);opacity:0;}}
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <div class="logo"><h1>🔥 Journey to 60</h1></div>
+    <ul class="nav-menu">
+      <li class="nav-item active">🏠 Home</li>
+      <li class="nav-item"><a href="https://youtube.com/@FireballMC_YT" target="_blank" style="color:inherit;text-decoration:none;">📺 YouTube</a></li>
+      <li class="nav-item"><a href="https://5a4feaa2.fireballmc.pages.dev/" target="_blank" style="color:inherit;text-decoration:none;">🌐 Original Site</a></li>
+    </ul>
+  </nav>
+
+  <main class="main-content">
+    <h1 class="fire-title">Journey to 60 Subs</h1>
+
+    <!-- Counters -->
+    <div class="counter-wrap">
+      <div class="counter-card">
+        <h3>Current Views</h3>
+        <div class="counter-num" id="viewsCount">0</div>
+      </div>
+      <div class="counter-card">
+        <h3>Current Subs</h3>
+        <div class="counter-num" id="subsCount">0</div>
+      </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-wrap">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-label">Subs: <span id="progressText">0 / 60 </span></div>
+    </div>
+
+    <!-- NEW: Daily Countdown to Jan 1 -->
+    <div class="countdown-card">
+      <h3>Days Until Jan 1st</h3>
+      <div class="countdown-num" id="daysLeft">0</div>
+      <div class="countdown-label">days remaining</div>
+    </div>
+
+    <!-- Countdown Chart -->
+    <div class="chart-wrap">
+      <div class="chart-card">
+        <div class="chart-title">Countdown to 60 Subs</div>
+        <div class="bar-row">
+          <div class="bar-label">13</div>
+        </div>
+       
+    </div>
+  </div>
+  </main>
+
+  <script>
+    // Animate counters on load
+    function animateNum(el,start,end,duration,textAfter=''){
+      const startTime=performance.now();
+      function update(now){
+        const t=Math.min((now-startTime)/duration,1);
+        const val=Math.floor(start+(end-start)*t);
+        el.textContent=val+textAfter;
+        if(t<1)requestAnimationFrame(update);
+      }
+      requestAnimationFrame(update);
+    }
+    document.querySelectorAll('.counter-num').forEach(n=>n.classList.add('scroll-flame'));
+
+    // Calculate days until next Jan 1
+    function daysUntilJan1(){
+      const now=new Date();
+      const next=new Date(now.getFullYear()+1,0,1); // Jan 1 next year
+      const ms=next-now;
+      return Math.ceil(ms/(1000*60*60*24));
+    }
+
+    window.addEventListener('load',()=>{
+      // Views & subs
+      animateNum(document.getElementById('viewsCount'),0,14500,1800);
+      animateNum(document.getElementById('subsCount'),0,47,1500);
+
+      // Progress bar
+      const subs=47,target=60000,percent=(subs/target*100).toFixed(1);
+      setTimeout(()=>{
+        document.getElementById('progressFill').style.width=percent+'%';
+        document.getElementById('progressText').textContent=`${subs.toLocaleString()} / 60 000`;
+        document.getElementById('currentBar').style.width=percent+'%';
+      },300);
+
+      // Daily countdown
+      const days=daysUntilJan1();
+      animateNum(document.getElementById('daysLeft'),0,days,1200);
+    });
+
+    // Floating embers
+    setInterval(()=>{
+      const e=document.createElement('div');e.className='ember';
+      e.style.left=Math.random()*100+'vw';
+      document.body.appendChild(e);
+      setTimeout(()=>e.remove(),6000);
+    },300);
+  </script>
+</body>
+</html>
