@@ -34,6 +34,32 @@
     .progress-label,.bar-num{color:var(--accent-light);}
     .ember{position:fixed;width:4px;height:4px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:1;animation:floatEmber 6s linear infinite;}
     @keyframes floatEmber{0%{transform:translateY(100vh) scale(1);opacity:1;}100%{transform:translateY(-100vh) scale(0);opacity:0;}}
+
+    /* NEW: extra burn-pulse for cards */
+    .counter-card{position:relative;overflow:hidden;}
+    .counter-card::after{
+      content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+      background:radial-gradient(circle,rgba(255,209,102,.4) 0%, transparent 60%);
+      opacity:0;transform:scale(0);transition:transform .7s, opacity .7s;
+    }
+    .counter-card:hover::after{transform:scale(1);opacity:1;}
+
+    /* NEW: shimmer sweep on progress bars */
+    .progress-fill{position:relative;}
+    .progress-fill::after{
+      content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);
+      animation:shimmer 2.5s infinite;
+    }
+    @keyframes shimmer{0%{left:-100%;}100%{left:100%;}}
+
+    /* NEW: number-slot machine effect */
+    @keyframes slotRoll{
+      0%{transform:translateY(-1.2em);opacity:0;}
+      50%{transform:translateY(0);opacity:1;}
+      100%{transform:translateY(0);opacity:1;}
+    }
+    .roll-in{display:inline-block;animation:slotRoll .6s cubic-bezier(.22,1.25,.54,1.05);}
   </style>
 </head>
 <body data-theme="dark">
@@ -43,13 +69,13 @@
     <div class="logo"><h1>🔥 Journey to 60</h1></div>
     <ul class="nav-menu">
       <li class="nav-item active">🏠 Home</li>
-      <li class="nav-item"><a href="https://youtube.com/@FireballMC_YT" target="_blank" style="color:inherit;text-decoration:none;">📺 YouTube</a></li>
-      <li class="nav-item"><a href="https://5a4feaa2.fireballmc.pages.dev/" target="_blank" style="color:inherit;text-decoration:none;">🌐 Original Site</a></li>
+      <li class="nav-item"><a href="https://youtube.com/@FireballMC_YT " target="_blank" style="color:inherit;text-decoration:none;">📺 YouTube</a></li>
+      <li class="nav-item"><a href="https://5a4feaa2.fireballmc.pages.dev/ " target="_blank" style="color:inherit;text-decoration:none;">🌐 Original Site</a></li>
     </ul>
   </nav>
 
   <main class="main-content">
-    <h1 class="fire-title">Journey to 60 Subs & 100K Views</h1>
+    <h1 class="fire-title">Journey to 60 Subs & 25K Views</h1>
 
     <!-- Real-time counters -->
     <div class="counter-wrap">
@@ -71,16 +97,12 @@
       <div class="progress-label">Subs: <span id="progressText">— / 60</span></div>
     </div>
 
-    <!-- Chart to 60 -->
-    <div class="chart-wrap">
-      <div class="chart-card">
-        <div class="chart-title">Progress</div>
-        <div class="bar-row">
-          <div class="bar-label">Current</div>
-          <div class="bar-track"><div class="bar-fill" id="currentBar" data-width="0"></div></div>
-          <div class="bar-num" id="currentNum">—</div>
-        </div>
+    <!-- Progress to 25K -->
+    <div class="progress-wrap">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFillViews"></div>
       </div>
+      <div class="progress-label">Views: <span id="progressTextViews">— / 25K</span></div>
     </div>
   </main>
 
@@ -101,6 +123,7 @@
     const API_KEY   = 'AIzaSyDMf_dA53j07Jr76SwIBhGPwAo_ISWYgRE';
     const CHANNEL_ID= 'UCG2Amy2r9zcApNwAumUWmSQ';
     const TARGET_SUBS=60;
+    const TARGET_VIEWS=25000;
 
     let cachedSubs=0,cachedViews=0;
 
@@ -117,23 +140,22 @@
       }catch(err){console.error('YT API error',err);}
     }
     function updateUI(){
-      animateNum(document.getElementById('viewsCount'),0,cachedViews,800);
-      animateNum(document.getElementById('subsCount'),0,cachedSubs,800);
-      const pct=(cachedSubs/TARGET_SUBS*100).toFixed(1);
-      document.getElementById('progressFill').style.width=pct+'%';
+      // slot-roll effect on numbers
+      rollNumber(document.getElementById('viewsCount'),cachedViews);
+      rollNumber(document.getElementById('subsCount'),cachedSubs);
+
+      const subPct=(cachedSubs/TARGET_SUBS*100).toFixed(1);
+      const viewPct=(cachedViews/TARGET_VIEWS*100).toFixed(1);
+      document.getElementById('progressFill').style.width=subPct+'%';
       document.getElementById('progressText').textContent=`${cachedSubs} / 60`;
-      document.getElementById('currentBar').style.width=pct+'%';
-      document.getElementById('currentNum').textContent=cachedSubs;
+      document.getElementById('progressFillViews').style.width=viewPct+'%';
+      document.getElementById('progressTextViews').textContent=`${cachedViews.toLocaleString()} / 25K`;
     }
-    function animateNum(el,start,end,duration){
-      const startTime=performance.now();
-      function update(now){
-        const t=Math.min((now-startTime)/duration,1);
-        const val=Math.floor(start+(end-start)*t);
-        el.textContent=val.toLocaleString();
-        if(t<1)requestAnimationFrame(update);
-      }
-      requestAnimationFrame(update);
+    function rollNumber(el,end){
+      el.classList.remove('roll-in');
+      void el.offsetWidth; // trigger reflow
+      el.textContent=end.toLocaleString();
+      el.classList.add('roll-in');
     }
 
     // ====== INITIAL + REFRESH ======
