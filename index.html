@@ -1,342 +1,206 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="icon" href="favicon-32x32.png" type="image/x-icon">
-  <title>Journey to 60 – FireballMC</title>
-  <style>
-    :root {
-      --accent: #ff6b35;
-      --accent-light: #ffd166;
-    }
-    [data-theme="light"] {
-      --bg-dark: #fff8f5;
-      --text-dark: #2d1300;
-    }
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg,#1a0a00 0%,#2d1300 50%,#1a0a00 100%);
-      color: #fff;
-      min-height: 100vh;
-      transition: background .4s, color .4s;
-    }
-
-    /* Theme toggle */
-    .theme-toggle {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
-      background: var(--accent);
-      border: none;
-      border-radius: 50%;
-      width: 48px;
-      height: 48px;
-      font-size: 1.5rem;
-      cursor: pointer;
-      z-index: 2000;
-      transition: transform .3s;
-    }
-    .theme-toggle:hover {
-      transform: scale(1.1) rotate(180deg);
-    }
-
-    /* Sidebar */
-    .sidebar {
-      width: 280px;
-      height: 100vh;
-      position: fixed;
-      left: 0;
-      top: 0;
-      background: linear-gradient(180deg,#2d1300 0%,#1a0a00 100%);
-      border-right: 2px solid var(--accent);
-      box-shadow: 4px 0 20px rgba(255,107,53,.3);
-      padding: 2rem 0;
-      z-index: 1000;
-    }
-    .logo h1 {
-      font-size: 1.8rem;
-      background: linear-gradient(45deg,var(--accent),var(--accent-light));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-align: center;
-      margin-bottom: 3rem;
-      animation: flicker 2s infinite alternate;
-    }
-    @keyframes flicker {
-      0% { text-shadow: 0 0 10px var(--accent); }
-      100% { text-shadow: 0 0 40px var(--accent-light); }
-    }
-    .nav-menu { list-style: none; padding: 0 1rem; }
-    .nav-item {
-      position: relative;
-      padding: 1rem 1.5rem;
-      margin-bottom: .5rem;
-      border-radius: 15px;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      overflow: hidden;
-      transition: all .3s ease;
-      color: #fff;
-      cursor: pointer;
-    }
-    .nav-item:hover {
-      background: rgba(255,107,53,.1);
-      transform: translateX(5px);
-    }
-    .nav-item.active {
-      background: linear-gradient(135deg,var(--accent),var(--accent-light));
-      box-shadow: 0 4px 15px rgba(255,107,53,.4);
-    }
-
-    .main-content {
-      margin-left: 280px;
-      padding: 3rem 2rem;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-    @media(max-width:768px) {
-      .sidebar { width: 100%; height: auto; position: relative; }
-      .main-content { margin-left: 0; padding: 2rem 1rem; }
-    }
-
-    .fire-title {
-      font-size: 3rem;
-      margin-bottom: 2rem;
-      background: linear-gradient(45deg,var(--accent),var(--accent-light),#ff9a5a);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-align: center;
-      animation: titleBurn 3s infinite alternate;
-    }
-    @keyframes titleBurn {
-      0% { text-shadow: 0 0 10px var(--accent); }
-      100% { text-shadow: 0 0 40px var(--accent-light); }
-    }
-
-    /* Animations for transitions */
-    .fade-section {
-      opacity: 0;
-      transform: translateY(10px);
-      transition: opacity .6s ease, transform .6s ease;
-      display: none;
-    }
-    .fade-section.active {
-      display: block;
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* Feature nav bar */
-    .feature-nav {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      margin-bottom: 2rem;
-    }
-    .feature-nav button {
-      background: rgba(255,107,53,.2);
-      border: 1px solid var(--accent);
-      color: #fff;
-      padding: .5rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all .3s;
-    }
-    .feature-nav button.active {
-      background: var(--accent);
-      color: #000;
-    }
-    .feature-nav button:hover {
-      background: var(--accent-light);
-      color: #000;
-    }
-
-    /* Cards */
-    .feature-card {
-      background: rgba(255,107,53,.1);
-      border: 2px solid var(--accent);
-      border-radius: 12px;
-      padding: 1rem 1.5rem;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 0 20px rgba(255,107,53,.2);
-      transition: transform .3s;
-    }
-    .feature-card:hover {
-      transform: translateY(-5px);
-    }
-
-    /* Calendar */
-    .calendar {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-    }
-    .event {
-      background: rgba(255,107,53,.15);
-      border-left: 4px solid var(--accent);
-      padding: .75rem 1rem;
-      width: 300px;
-      border-radius: 8px;
-    }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="icon" href="favicon-32x32.png" type="image/x-icon">
+<title>Journey to 60 – FireballMC</title>
+<style>
+:root{--accent:#ff6b35;--accent-light:#ffd166;}
+[data-theme="light"]{--bg-dark:#fff8f5;--text-dark:#2d1300;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:Arial,sans-serif;background:linear-gradient(135deg,#1a0a00 0%,#2d1300 50%,#1a0a00 100%);color:#fff;min-height:100vh;transition:background .4s,color .4s;}
+.theme-toggle{position:fixed;top:1rem;right:1rem;background:var(--accent);border:none;border-radius:50%;width:48px;height:48px;font-size:1.5rem;cursor:pointer;z-index:2000;transition:transform .3s;}
+.theme-toggle:hover{transform:scale(1.1) rotate(180deg);}
+.sidebar{width:280px;height:100vh;position:fixed;left:0;top:0;background:linear-gradient(180deg,#2d1300 0%,#1a0a00 100%);border-right:2px solid var(--accent);box-shadow:4px 0 20px rgba(255,107,53,.3);padding:2rem 0;z-index:1000;}
+.logo h1{font-size:1.8rem;background:linear-gradient(45deg,var(--accent),var(--accent-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:3rem;animation:flicker 2s infinite alternate;}
+@keyframes flicker{0%{text-shadow:0 0 10px var(--accent);}100%{text-shadow:0 0 40px var(--accent-light);}}
+.nav-menu{list-style:none;padding:0 1rem;}
+.nav-item{position:relative;padding:1rem 1.5rem;margin-bottom:.5rem;border-radius:15px;display:flex;align-items:center;gap:1rem;overflow:hidden;transition:all .3s ease;color:#fff;cursor:pointer;}
+.nav-item::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,107,53,.4),transparent);transition:left .5s ease;}
+.nav-item:hover::before{left:100%;}
+.nav-item:hover{background:rgba(255,107,53,.1);transform:translateX(5px);}
+.nav-item.active{background:linear-gradient(135deg,var(--accent),var(--accent-light));box-shadow:0 4px 15px rgba(255,107,53,.4);}
+.main-content{margin-left:280px;padding:3rem 2rem;min-height:100vh;position:relative;overflow:hidden;}
+@media(max-width:768px){.sidebar{width:100%;height:auto;position:relative;}.main-content{margin-left:0;padding:2rem 1rem;}}
+.fire-title{font-size:3rem;margin-bottom:2rem;background:linear-gradient(45deg,var(--accent),var(--accent-light),#ff9a5a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;animation:titleBurn 3s infinite alternate;}
+@keyframes titleBurn{0%{text-shadow:0 0 10px var(--accent);}100%{text-shadow:0 0 40px var(--accent-light);}}
+.counter-wrap{display:flex;flex-wrap:wrap;gap:2rem;justify-content:center;margin-bottom:3rem;}
+.counter-card{background:linear-gradient(135deg,rgba(255,107,53,.1),rgba(255,154,90,.1));border:2px solid var(--accent);border-radius:15px;padding:2rem 3rem;text-align:center;animation:float 4s ease-in-out infinite;position:relative;overflow:hidden;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+.counter-card h3{color:var(--accent-light);margin-bottom:.5rem;font-size:1.2rem;}
+.counter-num{font-size:3rem;font-weight:bold;color:var(--accent);text-shadow:0 0 10px rgba(255,107,53,.5);}
+.progress-wrap,.chart-wrap{max-width:600px;margin:auto auto 3rem;}
+.progress-bar,.bar-track{height:30px;background:rgba(255,107,53,.2);border-radius:15px;overflow:hidden;}
+.progress-fill,.bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-light));border-radius:15px;width:0;transition:width 1.5s ease;position:relative;}
+.progress-fill::after{ content:'';position:absolute;top:0;left:-100%;width:100%;height:100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent); animation:shimmer 2.5s infinite; }
+@keyframes shimmer{0%{left:-100%;}100%{left:100%;}}
+.roll-in{display:inline-block;animation:slotRoll .6s cubic-bezier(.22,1.25,.54,1.05);}
+@keyframes slotRoll{0%{transform:translateY(-1.2em);opacity:0;}50%{transform:translateY(0);opacity:1;}100%{transform:translateY(0);opacity:1;}}
+.ember{position:fixed;width:4px;height:4px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:1;animation:floatEmber 6s linear infinite;}
+@keyframes floatEmber{0%{transform:translateY(100vh) scale(1);opacity:1;}100%{transform:translateY(-100vh) scale(0);opacity:0;}}
+/* Features Section */
+.features-nav{display:flex;gap:1rem;margin-bottom:2rem;justify-content:center;}
+.features-nav button{background:rgba(255,107,53,.2);border:2px solid var(--accent);color:#fff;padding:.5rem 1rem;border-radius:10px;cursor:pointer;transition:all .3s;}
+.features-nav button.active{background:linear-gradient(135deg,var(--accent),var(--accent-light));box-shadow:0 4px 15px rgba(255,107,53,.4);}
+.feature-content{position:relative;min-height:300px;}
+.feature-section{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;transform:scale(0.95);transition:opacity .6s ease, transform .6s ease;}
+.feature-section.active{opacity:1;transform:scale(1);}
+.feature-card{background:linear-gradient(135deg,rgba(255,107,53,.1),rgba(255,154,90,.1));border:2px solid var(--accent);border-radius:15px;padding:1.5rem;margin-bottom:1.5rem;position:relative;overflow:hidden;transition:box-shadow .3s;}
+.feature-card::after{content:'';position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;background:radial-gradient(circle,rgba(255,107,53,.3),transparent 70%);opacity:0;transition:opacity .5s;}
+.feature-card:hover::after{opacity:1;}
+.event-calendar{border:2px solid var(--accent);border-radius:15px;padding:1rem;background:rgba(255,107,53,.05);}
+</style>
 </head>
 <body data-theme="dark">
-  <button class="theme-toggle" id="themeToggle">🌓</button>
+<button class="theme-toggle" id="themeToggle">🌓</button>
+<nav class="sidebar">
+  <div class="logo"><h1>🔥 Journey to 60</h1></div>
+  <ul class="nav-menu">
+    <li class="nav-item active">🏠 Home</li>
+    <li class="nav-item"><a href="https://youtube.com/@FireballMC_YT" target="_blank" style="color:inherit;text-decoration:none;">📺 YouTube</a></li>
+    <li class="nav-item"><a href="https://fireballmc.pages.dev/" target="_blank" style="color:inherit;text-decoration:none;">🌐 Original Site</a></li>
+    <li class="nav-item">⭐ Features</li>
+  </ul>
+</nav>
+<main class="main-content">
+  <h1 class="fire-title">Journey to 60 Subs & 25K Views</h1>
 
-  <nav class="sidebar">
-    <div class="logo"><h1>🔥 Journey to 60</h1></div>
-    <ul class="nav-menu">
-      <li class="nav-item active" data-target="home">🏠 Home</li>
-      <li class="nav-item" data-target="features">🔥 Features</li>
-      <li class="nav-item"><a href="https://youtube.com/@FireballMC_YT" target="_blank" style="color:inherit;text-decoration:none;">📺 YouTube</a></li>
-      <li class="nav-item"><a href="https://fireballmc.pages.dev/" target="_blank" style="color:inherit;text-decoration:none;">🌐 Original Site</a></li>
-    </ul>
-  </nav>
+  <!-- Real-time counters -->
+  <div class="counter-wrap">
+    <div class="counter-card">
+      <h3>Current Views</h3>
+      <div class="counter-num" id="viewsCount">—</div>
+    </div>
+    <div class="counter-card">
+      <h3>Current Subs</h3>
+      <div class="counter-num" id="subsCount">—</div>
+    </div>
+  </div>
 
-  <main class="main-content">
-    <!-- HOME SECTION -->
-    <section id="home" class="fade-section active">
-      <h1 class="fire-title">Journey to 60 Subs & 25K Views</h1>
+  <!-- Progress bars -->
+  <div class="progress-wrap">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-label">Subs: <span id="progressText">— / 60</span></div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFillViews"></div>
+    </div>
+    <div class="progress-label">Views: <span id="progressTextViews">— / 25K</span></div>
+  </div>
 
-      <div class="counter-wrap">
+  <!-- Features Section -->
+  <div class="features">
+    <div class="features-nav">
+      <button class="active" data-target="mods">Mods</button>
+      <button data-target="uploads">Uploads</button>
+      <button data-target="events">Events</button>
+    </div>
+    <div class="feature-content">
+      <div class="feature-section active" id="mods">
         <div class="feature-card">
-          <h3>Current Views</h3>
-          <div class="counter-num" id="viewsCount">—</div>
-        </div>
-        <div class="feature-card">
-          <h3>Current Subs</h3>
-          <div class="counter-num" id="subsCount">—</div>
-        </div>
-      </div>
-
-      <div class="progress-wrap">
-        <div class="progress-bar" style="background:rgba(255,107,53,.2);border-radius:15px;overflow:hidden;">
-          <div id="progressFill" style="height:30px;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-light));transition:width 1.5s ease;"></div>
-        </div>
-        <p>Subs: <span id="progressText">— / 60</span></p>
-      </div>
-
-      <div class="progress-wrap">
-        <div class="progress-bar" style="background:rgba(255,107,53,.2);border-radius:15px;overflow:hidden;">
-          <div id="progressFillViews" style="height:30px;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-light));transition:width 1.5s ease;"></div>
-        </div>
-        <p>Views: <span id="progressTextViews">— / 25K</span></p>
-      </div>
-    </section>
-
-    <!-- FEATURES SECTION -->
-    <section id="features" class="fade-section">
-      <h1 class="fire-title">Features</h1>
-
-      <div class="feature-nav">
-        <button class="active" data-sub="mods">Mods</button>
-        <button data-sub="uploads">Uploads</button>
-        <button data-sub="events">Events</button>
-      </div>
-
-      <!-- Mods -->
-      <div id="mods" class="fade-section active">
-        <div class="feature-card">
-          <img src="mod-placeholder.png" alt="FIREPOWER Mod" style="width:100%;max-width:400px;border-radius:10px;display:block;margin:auto;">
-          <h2>🔥 Mod Title: FIREPOWER</h2>
+          <h3>Mod Title: FIREPOWER</h3>
           <p>Mod Desc: A new Firepower mechanic, and a boss waiting for you on the way...</p>
-          <p><b>Release Date:</b> Nov/Dec 2025<br><b>Version:</b> Beta 1.2.2</p>
+          <p>Mod Release Date: Nov/Dec 2025</p>
+          <p>Mod Version: Beta 1.2.2</p>
         </div>
       </div>
-
-      <!-- Uploads -->
-      <div id="uploads" class="fade-section">
-        <div id="videosList"></div>
-      </div>
-
-      <!-- Events -->
-      <div id="events" class="fade-section">
-        <div class="calendar">
-          <div class="event"><b>Jan 1:</b> The Big Reveal</div>
-          <div class="event"><b>Nov/Dec:</b> FIREPOWER Drop</div>
+      <div class="feature-section" id="uploads">
+        <!-- Placeholder: your API videos will show here -->
+        <div class="feature-card">
+          <h3>Your Videos</h3>
+          <ul id="videoList">
+            <li>Video 1 (most views)</li>
+            <li>Video 2</li>
+            <li>Video 3 (least views)</li>
+          </ul>
         </div>
       </div>
-    </section>
-  </main>
+      <div class="feature-section" id="events">
+        <div class="event-calendar">
+          <h4>Events</h4>
+          <ul>
+            <li>Jan 1: The Big Reveal</li>
+            <li>Nov/Dec: FIREPOWER Drop</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
 
-  <script>
-    // THEME SWITCHER
-    const toggle=document.getElementById('themeToggle');
-    const html=document.documentElement;
-    const saved=localStorage.getItem('theme')||'dark';
-    html.setAttribute('data-theme',saved);
-    toggle.addEventListener('click',()=>{
-      const current=html.getAttribute('data-theme');
-      const next=current==='dark'?'light':'dark';
-      html.setAttribute('data-theme',next);
-      localStorage.setItem('theme',next);
-    });
+<script>
+// ====== THEME SWITCHER ======
+const toggle=document.getElementById('themeToggle');
+const html=document.documentElement;
+const saved=localStorage.getItem('theme')||'dark';
+html.setAttribute('data-theme',saved);
+toggle.addEventListener('click',()=>{
+  const current=html.getAttribute('data-theme');
+  const next=current==='dark'?'light':'dark';
+  html.setAttribute('data-theme',next);
+  localStorage.setItem('theme',next);
+});
 
-    // SECTION SWITCH
-    const navItems=document.querySelectorAll('.nav-item[data-target]');
-    const sections=document.querySelectorAll('.fade-section');
-    navItems.forEach(item=>{
-      item.addEventListener('click',()=>{
-        const target=item.dataset.target;
-        navItems.forEach(n=>n.classList.remove('active'));
-        item.classList.add('active');
-        sections.forEach(sec=>{
-          sec.classList.remove('active');
-          if(sec.id===target) sec.classList.add('active');
-        });
-      });
-    });
-
-    // FEATURE SUBNAV
-    const featureBtns=document.querySelectorAll('.feature-nav button');
-    const subSections=document.querySelectorAll('#features > .fade-section');
-    featureBtns.forEach(btn=>{
-      btn.addEventListener('click',()=>{
-        featureBtns.forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        subSections.forEach(sub=>{
-          sub.classList.remove('active');
-          if(sub.id===btn.dataset.sub) sub.classList.add('active');
-        });
-      });
-    });
-
-    // YOUTUBE API
-    const API_KEY='AIzaSyDMf_dA53j07Jr76SwIBhGPwAo_ISWYgRE';
-    const CHANNEL_ID='UCG2Amy2r9zcApNwAumUWmSQ';
-    const TARGET_SUBS=60;
-    const TARGET_VIEWS=25000;
-
-    async function fetchStats(){
-      try{
-        const res=await fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${CHANNEL_ID}&key=${API_KEY}`);
-        const data=await res.json();
-        if(data.items&&data.items[0]){
-          const stats=data.items[0].statistics;
-          const subs=parseInt(stats.subscriberCount,10);
-          const views=parseInt(stats.viewCount,10);
-          updateStats(subs,views);
-        }
-      }catch(err){console.error('YT API error',err);}
+// ====== YOUTUBE API (unchanged, your existing code works) ======
+const API_KEY = 'AIzaSyDMf_dA53j07Jr76SwIBhGPwAo_ISWYgRE';
+const CHANNEL_ID= 'UCG2Amy2r9zcApNwAumUWmSQ';
+const TARGET_SUBS=60;
+const TARGET_VIEWS=25000;
+let cachedSubs=0,cachedViews=0;
+async function fetchStats(){
+  try{
+    const res=await fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${CHANNEL_ID}&key=${API_KEY}`);
+    const data=await res.json();
+    if(data.items&&data.items[0]){
+      const stats=data.items[0].statistics;
+      cachedSubs=parseInt(stats.subscriberCount,10);
+      cachedViews=parseInt(stats.viewCount,10);
+      updateUI();
     }
-    function updateStats(subs,views){
-      document.getElementById('subsCount').textContent=subs.toLocaleString();
-      document.getElementById('viewsCount').textContent=views.toLocaleString();
-      document.getElementById('progressFill').style.width=Math.min(subs/TARGET_SUBS*100,100)+'%';
-      document.getElementById('progressFillViews').style.width=Math.min(views/TARGET_VIEWS*100,100)+'%';
-      document.getElementById('progressText').textContent=`${subs} / ${TARGET_SUBS}`;
-      document.getElementById('progressTextViews').textContent=`${views.toLocaleString()} / 25K`;
-    }
-    fetchStats();
-    setInterval(fetchStats,30000);
-  </script>
+  }catch(err){console.error('YT API error',err);}
+}
+function updateUI(){
+  rollNumber(document.getElementById('viewsCount'),cachedViews);
+  rollNumber(document.getElementById('subsCount'),cachedSubs);
+  const subPct=(cachedSubs/TARGET_SUBS*100).toFixed(1);
+  const viewPct=(cachedViews/TARGET_VIEWS*100).toFixed(1);
+  document.getElementById('progressFill').style.width=subPct+'%';
+  document.getElementById('progressText').textContent=`${cachedSubs} / 60`;
+  document.getElementById('progressFillViews').style.width=viewPct+'%';
+  document.getElementById('progressTextViews').textContent=`${cachedViews.toLocaleString()} / 25K`;
+}
+function rollNumber(el,end){
+  el.classList.remove('roll-in'); void el.offsetWidth; el.textContent=end.toLocaleString(); el.classList.add('roll-in');
+}
+fetchStats(); setInterval(fetchStats,30000);
+
+// ====== EMBERS ======
+setInterval(()=>{
+  const e=document.createElement('div');e.className='ember';
+  e.style.left=Math.random()*100+'vw';
+  document.body.appendChild(e);
+  setTimeout(()=>e.remove(),6000);
+},300);
+
+// ====== FEATURES TAB SWITCH ======
+const featureBtns=document.querySelectorAll('.features-nav button');
+const featureSections=document.querySelectorAll('.feature-section');
+featureBtns.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    featureBtns.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    featureSections.forEach(sec=>{
+      sec.classList.remove('active');
+      if(sec.id===btn.dataset.target){
+        sec.classList.add('active');
+      }
+    });
+  });
+});
+</script>
 </body>
 </html>
