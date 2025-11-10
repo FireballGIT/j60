@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,8 +35,6 @@
     .progress-label,.bar-num{color:var(--accent-light);}
     .ember{position:fixed;width:4px;height:4px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:1;animation:floatEmber 6s linear infinite;}
     @keyframes floatEmber{0%{transform:translateY(100vh) scale(1);opacity:1;}100%{transform:translateY(-100vh) scale(0);opacity:0;}}
-
-    /* NEW: extra burn-pulse for cards */
     .counter-card{position:relative;overflow:hidden;}
     .counter-card::after{
       content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
@@ -45,8 +42,6 @@
       opacity:0;transform:scale(0);transition:transform .7s, opacity .7s;
     }
     .counter-card:hover::after{transform:scale(1);opacity:1;}
-
-    /* NEW: shimmer sweep on progress bars */
     .progress-fill{position:relative;}
     .progress-fill::after{
       content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
@@ -54,14 +49,42 @@
       animation:shimmer 2.5s infinite;
     }
     @keyframes shimmer{0%{left:-100%;}100%{left:100%;}}
-
-    /* NEW: number-slot machine effect */
     @keyframes slotRoll{
       0%{transform:translateY(-1.2em);opacity:0;}
       50%{transform:translateY(0);opacity:1;}
       100%{transform:translateY(0);opacity:1;}
     }
     .roll-in{display:inline-block;animation:slotRoll .6s cubic-bezier(.22,1.25,.54,1.05);}
+
+    /* ====== FEATURES SECTION ====== */
+    .features-content{display:none;}
+    .features-content.active{display:block;}
+    .features-nav{display:flex;gap:1rem;margin-bottom:2rem;justify-content:center;}
+    .features-nav button{
+      background:transparent;border:2px solid var(--accent);color:var(--accent-light);
+      padding:.6rem 1.2rem;border-radius:10px;cursor:pointer;transition:all .3s;
+    }
+    .features-nav button:hover,.features-nav button.active{
+      background:var(--accent);color:#1a0a00;
+    }
+    .features-panel{display:none;}
+    .features-panel.active{display:block;}
+    /* Calendar */
+    .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:.5rem;max-width:400px;margin:auto;}
+    .calendar-grid div{padding:.5rem;text-align:center;border:1px solid rgba(255,107,53,.3);border-radius:6px;font-size:.9rem;}
+    .calendar-grid .today{background:var(--accent);color:#1a0a00;font-weight:bold;}
+    /* Mod card */
+    .mod-card{background:rgba(255,107,53,.08);border:2px solid var(--accent);border-radius:12px;padding:1.5rem;max-width:320px;margin:auto;text-align:center;}
+    .mod-card img{width:100%;border-radius:8px;margin-bottom:1rem;}
+    .mod-card h3{color:var(--accent-light);margin-bottom:.5rem;}
+    .mod-card p{margin:.3rem 0;font-size:.95rem;}
+    /* Fire burst on Features click */
+    @keyframes fireBurst{
+      0%{transform:scale(1) rotate(0deg);opacity:1;}
+      50%{transform:scale(1.4) rotate(180deg);opacity:.6;}
+      100%{transform:scale(1) rotate(360deg);opacity:1;}
+    }
+    .fire-burst{animation:fireBurst .8s ease-out;}
   </style>
 </head>
 <body data-theme="dark">
@@ -70,41 +93,70 @@
   <nav class="sidebar">
     <div class="logo"><h1>🔥 Journey to 60</h1></div>
     <ul class="nav-menu">
-      <li class="nav-item active">🏠 Home</li>
-      <li class="nav-item"><a href="https://youtube.com/@FireballMC_YT " target="_blank" style="color:inherit;text-decoration:none;">📺 YouTube</a></li>
-      <li class="nav-item"><a href="https://fireballmc.pages.dev/ " target="_blank" style="color:inherit;text-decoration:none;">🌐 Original Site</a></li>
+      <li class="nav-item active" data-page="home">🏠 Home</li>
+      <li class="nav-item" data-page="features">✨ Features</li>
+      <li class="nav-item"><a href="https://youtube.com/@FireballMC_YT" target="_blank" style="color:inherit;text-decoration:none;">📺 YouTube</a></li>
+      <li class="nav-item"><a href="https://fireballmc.pages.dev/" target="_blank" style="color:inherit;text-decoration:none;">🌐 Original Site</a></li>
     </ul>
   </nav>
 
   <main class="main-content">
-    <h1 class="fire-title">Journey to 60 Subs & 25K Views</h1>
-
-    <!-- Real-time counters -->
-    <div class="counter-wrap">
-      <div class="counter-card">
-        <h3>Current Views</h3>
-        <div class="counter-num" id="viewsCount">—</div>
+    <!-- HOME PAGE -->
+    <div id="homePage" class="page-content">
+      <h1 class="fire-title">Journey to 60 Subs & 25K Views</h1>
+      <div class="counter-wrap">
+        <div class="counter-card">
+          <h3>Current Views</h3>
+          <div class="counter-num" id="viewsCount">—</div>
+        </div>
+        <div class="counter-card">
+          <h3>Current Subs</h3>
+          <div class="counter-num" id="subsCount">—</div>
+        </div>
       </div>
-      <div class="counter-card">
-        <h3>Current Subs</h3>
-        <div class="counter-num" id="subsCount">—</div>
+      <div class="progress-wrap">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-label">Subs: <span id="progressText">— / 60</span></div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFillViews"></div>
+        </div>
+        <div class="progress-label">Views: <span id="progressTextViews">— / 25K</span></div>
       </div>
     </div>
 
-    <!-- Progress to 60 -->
-    <div class="progress-wrap">
-      <div class="progress-bar">
-        <div class="progress-fill" id="progressFill"></div>
+    <!-- FEATURES PAGE -->
+    <div id="featuresPage" class="page-content features-content">
+      <h1 class="fire-title">Features</h1>
+      <div class="features-nav">
+        <button data-tab="uploads" class="active">Uploads</button>
+        <button data-tab="mods">Mods</button>
+        <button data-tab="events">Events</button>
       </div>
-      <div class="progress-label">Subs: <span id="progressText">— / 60</span></div>
-    </div>
 
-    <!-- Progress to 25K -->
-    <div class="progress-wrap">
-      <div class="progress-bar">
-        <div class="progress-fill" id="progressFillViews"></div>
+      <div id="uploadsPanel" class="features-panel active">
+        <h2 style="text-align:center;color:var(--accent-light);margin-bottom:1rem;">Latest Uploads</h2>
+        <div id="videoList" style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;"></div>
       </div>
-      <div class="progress-label">Views: <span id="progressTextViews">— / 25K</span></div>
+
+      <div id="modsPanel" class="features-panel">
+        <h2 style="text-align:center;color:var(--accent-light);margin-bottom:1rem;">Mods</h2>
+        <div class="mod-card">
+          <img src="sfsdfafa.png" alt="Image Not Loaded">
+          <h3>FIREPOWER</h3>
+          <p>A new Firepower mechanic and a new boss along the way!</p>
+          <p><strong>Release:</strong> Nov/Dec 2025</p>
+          <p><strong>Current Version:</strong> Beta 2.12</p>
+        </div>
+      </div>
+
+      <div id="eventsPanel" class="features-panel">
+        <h2 style="text-align:center;color:var(--accent-light);margin-bottom:1rem;">Event Calendar</h2>
+        <div class="calendar-grid" id="calendar"></div>
+      </div>
     </div>
   </main>
 
@@ -142,10 +194,8 @@
       }catch(err){console.error('YT API error',err);}
     }
     function updateUI(){
-      // slot-roll effect on numbers
       rollNumber(document.getElementById('viewsCount'),cachedViews);
       rollNumber(document.getElementById('subsCount'),cachedSubs);
-
       const subPct=(cachedSubs/TARGET_SUBS*100).toFixed(1);
       const viewPct=(cachedViews/TARGET_VIEWS*100).toFixed(1);
       document.getElementById('progressFill').style.width=subPct+'%';
@@ -155,12 +205,10 @@
     }
     function rollNumber(el,end){
       el.classList.remove('roll-in');
-      void el.offsetWidth; // trigger reflow
+      void el.offsetWidth;
       el.textContent=end.toLocaleString();
       el.classList.add('roll-in');
     }
-
-    // ====== INITIAL + REFRESH ======
     fetchStats();
     setInterval(fetchStats,30000);
 
@@ -171,6 +219,76 @@
       document.body.appendChild(e);
       setTimeout(()=>e.remove(),6000);
     },300);
+
+    // ====== PAGE SWITCHING ======
+    const navItems=document.querySelectorAll('.nav-item');
+    const pages={home:document.getElementById('homePage'),features:document.getElementById('featuresPage')};
+    function showPage(page){
+      Object.values(pages).forEach(p=>p.style.display='none');
+      pages[page].style.display='block';
+      navItems.forEach(n=>n.classList.toggle('active',n.dataset.page===page));
+    }
+    navItems.forEach(item=>{
+      item.addEventListener('click',()=>{
+        const page=item.dataset.page;
+        if(page){
+          showPage(page);
+          if(page==='features'){
+            document.getElementById('featuresPage').classList.add('fire-burst');
+            setTimeout(()=>document.getElementById('featuresPage').classList.remove('fire-burst'),800);
+          }
+        }
+      });
+    });
+
+    // ====== FEATURES TABS ======
+    const tabButtons=document.querySelectorAll('.features-nav button');
+    const panels=document.querySelectorAll('.features-panel');
+    tabButtons.forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const tab=btn.dataset.tab;
+        panels.forEach(p=>p.classList.remove('active'));
+        tabButtons.forEach(b=>b.classList.remove('active'));
+        document.getElementById(tab+'Panel').classList.add('active');
+        btn.classList.add('active');
+      });
+    });
+
+    // ====== LOAD UPLOADS (uses same API) ======
+    async function loadUploads(){
+      try{
+        const res=await fetch(`https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet&order=date&maxResults=6`);
+        const data=await res.json();
+        const list=document.getElementById('videoList');
+        list.innerHTML='';
+        data.items.forEach(item=>{
+          const a=document.createElement('a');
+          a.href=`https://youtu.be/${item.id.videoId}`;
+          a.target='_blank';
+          a.innerHTML=`<img src="${item.snippet.thumbnails.medium.url}" style="border-radius:8px;width:240px;">`;
+          list.appendChild(a);
+        });
+      }catch(err){console.error('Uploads error',err);}
+    }
+    loadUploads();
+
+    // ====== SIMPLE CALENDAR ======
+    function buildCalendar(){
+      const grid=document.getElementById('calendar');
+      const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      days.forEach(d=>{const div=document.createElement('div');div.textContent=d;grid.appendChild(div);});
+      const today=new Date().getDate();
+      const blanks=new Date(new Date().getFullYear(),new Date().getMonth(),1).getDay();
+      for(let i=0;i<blanks;i++){const div=document.createElement('div');grid.appendChild(div);}
+      const daysInMonth=new Date(new Date().getFullYear(),new Date().getMonth()+1,0).getDate();
+      for(let d=1;d<=daysInMonth;d++){
+        const div=document.createElement('div');
+        div.textContent=d;
+        if(d===today) div.classList.add('today');
+        grid.appendChild(div);
+      }
+    }
+    buildCalendar();
   </script>
 </body>
 </html>
